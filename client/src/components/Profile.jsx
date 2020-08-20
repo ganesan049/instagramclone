@@ -5,7 +5,51 @@ import { UserContext } from "../App";
 const Profile = () => {
   const { state, dispatch } = useContext(UserContext);
   const [data, setdata] = useState([]);
-  // const [url, seturl] = useState("");
+  const postDetails = (e) => {
+    console.log(e.target.files[0]);
+    let data = new FormData();
+    // console.log(image)
+    data.append("upload_preset", "insta-clone");
+    data.append("cloud_name", "dt1u4najy");
+    data.append("file", e.target.files[0]);
+    fetch("https://api.cloudinary.com/v1_1/dt1u4najy/image/upload", {
+      method: "post",
+      body: data,
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        if (result.url) {
+          fetch("/updateImg", {
+            method: "put",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer" + localStorage.getItem("jwt"),
+            },
+            body: JSON.stringify({
+              url: result.url,
+            }),
+          })
+            .then((res) => res.json())
+            .then((result) => {
+              let temp = JSON.stringify(result);
+              console.log(
+                typeof temp,
+                typeof result,
+                result,
+                result.result.url
+              );
+              dispatch({ type: "UPDATEIMG", payload: result.result.url });
+              localStorage.setItem(
+                "user",
+                JSON.stringify({ ...state, url: result.result.url })
+              );
+            })
+            .catch((err) => console.log(err));
+        } else {
+          console.log(result.error);
+        }
+      });
+  };
   useEffect(() => {
     Axios.get("/myPosts", {
       headers: {
@@ -37,61 +81,7 @@ const Profile = () => {
         console.log(error.config);
       });
   }, []);
-  let upload = async (e) => {
-    console.log(e.target.files[0]);
-    let data = new FormData();
-    // console.log(image)
-    data.append("uploadImage", e.target.files[0]);
-    await Axios.post("/upload/img", data, {
-      headers: {
-        Authorization: "Bearer" + localStorage.getItem("jwt"),
-      },
-    })
-      .then((res) => {
-        console.log(res.data.message);
-        fetch("/updateImg", {
-          method: "put",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer" + localStorage.getItem("jwt"),
-          },
-          body: JSON.stringify({
-            url: res.data.message,
-          }),
-        })
-          .then((res) => res.json())
-          .then((result) => {
-            let temp = JSON.stringify(result);
-            console.log(typeof temp, typeof result, result, result.result.url);
-            dispatch({ type: "UPDATEIMG", payload: result.result.url });
-            localStorage.setItem(
-              "user",
-              JSON.stringify({ ...state, url: result.result.url })
-            );
-          })
-          .catch((err) => console.log(err));
-      })
-      .catch((error) => {
-        if (error.response) {
-          // The request was made and the server responded with a status code
-          // that falls out of the range of 2xx
-          console.log(error.response);
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-          // M.toast({ html: "error" });
-        } else if (error.request) {
-          // The request was made but no response was received
-          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-          // http.ClientRequest in node.js
-          console.log(error.request);
-        } else {
-          // Something happened in setting up the request that triggered an Error
-          console.log("Error", error.message);
-        }
-        console.log(error.config);
-      });
-  };
+
   let gallery = () => {
     return data.length > 0 ? (
       data.map((item) => {
@@ -99,7 +89,7 @@ const Profile = () => {
           <img
             className="item"
             key={item._id}
-            src={`/${item.photo}`}
+            src={`${item.photo}`}
             alt="profile_img"
           />
         );
@@ -127,7 +117,7 @@ const Profile = () => {
               <img
                 src={
                   state.url
-                    ? `/${state.url}`
+                    ? `${state.url}`
                     : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcS4hCfoSjWSVgLonuMDQt9DagIUMBMGi6UPyw&usqp=CAU"
                 }
                 alt="profile_img"
@@ -143,7 +133,8 @@ const Profile = () => {
                   <input
                     type="file"
                     onChange={(e) => {
-                      upload(e);
+                      // upload(e);
+                      postDetails(e);
                     }}
                   />
                 </div>

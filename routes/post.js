@@ -12,6 +12,7 @@ router.get("/allPosts", reqireLogin, (req, res) => {
     Posts.find()
         .populate('postedBy', "_id name", 'Users')
         .populate('comments.postedBy', "_id name", 'Users')
+        .sort("-createdAt")
         .then(posts => {
             console.log(posts)
             res.json({
@@ -33,6 +34,7 @@ router.get("/getSubPost", reqireLogin, (req, res) => {
         })
         .populate('postedBy', "_id name", 'Users')
         .populate('comments.postedBy', "_id name", 'Users')
+        .sort("-createdAt")
         .then(posts => {
             console.log(posts)
             res.json({
@@ -47,8 +49,8 @@ router.get("/getSubPost", reqireLogin, (req, res) => {
         })
 })
 
-router.post("/upload/img", reqireLogin, upload, validator)
-router.post("/uploadNew/img", upload, validator)
+// router.post("/upload/img", reqireLogin, upload, validator)
+// router.post("/uploadNew/img", upload, validator)
 
 router.post("/createPost", reqireLogin, (req, res) => {
     const {

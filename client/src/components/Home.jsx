@@ -243,7 +243,7 @@ const Home = () => {
                 </button>
               </h5>
               <div className="card-image">
-                <img src={`/${item.photo}`} alt="profile_img" />
+                <img src={`${item.photo}`} alt="profile_img" />
               </div>
               <div className="card-content">
                 <a href="">

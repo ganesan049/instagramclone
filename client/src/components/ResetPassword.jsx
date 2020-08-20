@@ -1,36 +1,22 @@
-import React, { useState, useContext } from "react";
-import { Link, useHistory } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useHistory, useParams } from "react-router-dom";
 import axios from "axios";
 import M from "materialize-css";
-import { UserContext } from "../App";
 
-const Login = () => {
+const ResetPassword = () => {
   // const { state, dispatch } = useContext();
-  const context = useContext(UserContext);
-  console.log(context);
+  const { token } = useParams();
   const history = useHistory();
   const [password, setpassword] = useState("");
-  const [email, setemail] = useState("");
   const [res, setres] = useState(null);
+  console.log(token);
   let onSubmit = (e) => {
     e.preventDefault();
-    let signin = {
-      password,
-      email,
-    };
-    console.log(signin);
     axios
-      .post("/signin", signin)
+      .put(`/reset/${token}`, { password: password })
       .then((res) => {
         console.log(res);
-        console.log(JSON.stringify(res.data.user));
-        // M.toast({ html: res.data.message });
-        // setres(res.data.message);
-        localStorage.setItem("jwt", res.data.token);
-        // localStorage.setItem("user", res.data.user);
-        localStorage.setItem("user", JSON.stringify(res.data.user));
-        context.dispatch({ type: "USER", payload: res.data.user });
-        history.push("/");
+        history.push("/signin");
       })
       .catch(function (error) {
         if (error.response) {
@@ -59,15 +45,7 @@ const Login = () => {
       <div className="card auth-card">
         <h2 className="brand-logo">Instagram</h2>
         <input
-          type="text"
-          className="input-field"
-          placeholder="email"
-          value={email}
-          id="email"
-          onChange={(e) => setemail(e.target.value)}
-        />
-        <input
-          type="password"
+          type="enter the new password"
           className="input-field"
           value={password}
           placeholder="password"
@@ -78,14 +56,13 @@ const Login = () => {
           className="waves-effect waves-light btn btn-primary"
           onClick={(e) => onSubmit(e)}
         >
-          button
+          Change Password
         </a>
         {res ? <p>{res}</p> : null}
-        <Link to="/reset">Forgot Password?</Link>
         <Link to="/signup">create new account?</Link>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default ResetPassword;

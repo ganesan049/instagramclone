@@ -10,7 +10,7 @@ const Signup = () => {
   const [email, setemail] = useState("");
   const [res, setres] = useState(null);
   const [image, setimage] = useState("");
-  const [url, seturl] = useState("");
+  const [url, seturl] = useState("undefined");
   // let changeHandler = (e) => {
   const [load, setload] = useState(true);
   //   console.log(e.target.id);
@@ -22,20 +22,23 @@ const Signup = () => {
     console.log(e.target.files[0]);
     setimage(e.target.files[0]);
     let data = new FormData();
-    // console.log(image)
-    data.append("uploadImage", e.target.files[0]);
-    // setformdata(data);
+    data.append("upload_preset", "insta-clone");
+    data.append("cloud_name", "dt1u4najy");
+    data.append("file", e.target.files[0]);
+    // data.append("uploadImage", e.target.files[0]); multer
 
-    await axios
-      .post("/uploadNew/img", data, {
-        headers: {
-          Authorization: "Bearer" + localStorage.getItem("jwt"),
-        },
-      })
+    fetch("https://api.cloudinary.com/v1_1/dt1u4najy/image/upload", {
+      method: "post",
+      body: data,
+    })
+      .then((res) => res.json())
       .then((res) => {
-        console.log(res.data);
-        seturl(res.data.message);
-        setload(false);
+        if (res.url) {
+          seturl(res.url);
+          setload(false);
+        } else {
+          console.log(res.error);
+        }
       })
       .catch((error) => {
         if (error.response) {
@@ -149,7 +152,7 @@ const Signup = () => {
         <a
           className="waves-effect waves-light btn btn-primary"
           onClick={(e) => onSubmit(e)}
-          disabled={load}
+          // disabled={load}
         >
           button
         </a>

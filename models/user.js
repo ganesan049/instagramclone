@@ -24,9 +24,11 @@ const userSchema = mongoose.Schema({
         type: ObjectId,
         ref: "User"
     }],
-    url:{
+    url: {
         type: String,
-    }
+    },
+    resetToken: String,
+    expireToken: Date,
 }, {
     timestamps: true,
 })

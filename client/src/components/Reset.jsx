@@ -1,36 +1,28 @@
 import React, { useState, useContext } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import axios from "axios";
 import M from "materialize-css";
-import { UserContext } from "../App";
 
-const Login = () => {
-  // const { state, dispatch } = useContext();
-  const context = useContext(UserContext);
-  console.log(context);
+const Reset = () => {
   const history = useHistory();
-  const [password, setpassword] = useState("");
   const [email, setemail] = useState("");
   const [res, setres] = useState(null);
   let onSubmit = (e) => {
     e.preventDefault();
-    let signin = {
-      password,
-      email,
-    };
-    console.log(signin);
+    console.log(email);
     axios
-      .post("/signin", signin)
+      .post(
+        "/resetPassword",
+        { email: email },
+        {
+          headers: {
+            Authorization: "Bearer" + localStorage.getItem("jwt"),
+          },
+        }
+      )
       .then((res) => {
         console.log(res);
-        console.log(JSON.stringify(res.data.user));
-        // M.toast({ html: res.data.message });
-        // setres(res.data.message);
-        localStorage.setItem("jwt", res.data.token);
-        // localStorage.setItem("user", res.data.user);
-        localStorage.setItem("user", JSON.stringify(res.data.user));
-        context.dispatch({ type: "USER", payload: res.data.user });
-        history.push("/");
+        history.push("/signin");
       })
       .catch(function (error) {
         if (error.response) {
@@ -66,26 +58,16 @@ const Login = () => {
           id="email"
           onChange={(e) => setemail(e.target.value)}
         />
-        <input
-          type="password"
-          className="input-field"
-          value={password}
-          placeholder="password"
-          id="password"
-          onChange={(e) => setpassword(e.target.value)}
-        />
         <a
           className="waves-effect waves-light btn btn-primary"
           onClick={(e) => onSubmit(e)}
         >
-          button
+          Reset Password
         </a>
         {res ? <p>{res}</p> : null}
-        <Link to="/reset">Forgot Password?</Link>
-        <Link to="/signup">create new account?</Link>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default Reset;

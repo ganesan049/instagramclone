@@ -134,6 +134,11 @@ h2 {
   background-color: #ffc107;
   font-weight: bold;
 }
-.material-icons:hover{
-cursor:pointer
+
+.material-icons:hover {
+  cursor: pointer
+}
+
+.modal {
+  width: 60% !important;
 }

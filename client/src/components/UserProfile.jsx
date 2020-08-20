@@ -47,7 +47,7 @@ const UserProfile = () => {
   };
   useEffect(() => {
     fethData();
-  }, []);
+  }, [id]);
   let gallery = () => {
     return userprofile && userprofile.post.length > 0 ? (
       userprofile.post.map((item) => {
@@ -55,7 +55,7 @@ const UserProfile = () => {
           <img
             className="item"
             key={item._id}
-            src={`/${item.photo}`}
+            src={`${item.photo}`}
             alt="profile_img"
           />
         );
@@ -132,7 +132,7 @@ const UserProfile = () => {
               <img
                 src={
                   userprofile.user.url
-                    ? `/${userprofile.user.url}`
+                    ? `${userprofile.user.url}`
                     : "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcS4hCfoSjWSVgLonuMDQt9DagIUMBMGi6UPyw&usqp=CAU"
                 }
                 alt="profile_img"
