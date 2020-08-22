@@ -76,12 +76,13 @@ const UserProfile = () => {
       .then((result) => {
         console.log(result);
         dispatch({
-          type: "UDPATE",
+          type: "UPDATE",
           payload: {
             following: result.mainUser.following,
             followers: result.mainUser.followers,
           },
         });
+        console.log(JSON.stringify(result.mainUser));
         localStorage.setItem("user", JSON.stringify(result.mainUser));
       })
       .catch((err) => {
@@ -101,7 +102,7 @@ const UserProfile = () => {
       .then((result) => {
         console.log(result);
         dispatch({
-          type: "UDPATE",
+          type: "UPDATE",
           payload: {
             following: result.mainUser.following,
             followers: result.mainUser.followers,

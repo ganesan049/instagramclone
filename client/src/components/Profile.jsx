@@ -5,6 +5,7 @@ import { UserContext } from "../App";
 const Profile = () => {
   const { state, dispatch } = useContext(UserContext);
   const [data, setdata] = useState([]);
+  console.log(state);
   const postDetails = (e) => {
     console.log(e.target.files[0]);
     let data = new FormData();

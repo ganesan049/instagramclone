@@ -147,6 +147,10 @@ router.post("/signin", (req, res) => {
 });
 
 router.post("/resetPassword", (req, res) => {
+  let path = "http://localhost:3000"
+  if (process.env.NODE_ENV === "production") {
+    path = "https://instaclone049.herokuapp.com"
+  }
   crypto.randomBytes(32, (err, buffer) => {
     if (err) console.log(err);
     const token = buffer.toString("hex");
@@ -170,7 +174,7 @@ router.post("/resetPassword", (req, res) => {
             subject: "Reset Password",
             html: `
           <p>You requested for password reset</p>
-          <h5>click in This <a href="http://localhost:3000/reset/${token}">Link</a></h5>
+          <h5>click in This <a href="${path}/reset/${token}">Link</a></h5>
           `
           }).then(output => console.log(output))
           res.json({

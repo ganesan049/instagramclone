@@ -8,6 +8,7 @@ const Home = () => {
   const { state, dispatch } = useContext(UserContext);
   const [comment, setcomment] = useState("");
   const [data, setdata] = useState([]);
+  console.log(process.env.NODE_ENV === "development");
   const fetchData = async () => {
     //console.log("object");
     Axios.get("/allPosts", {
@@ -133,7 +134,8 @@ const Home = () => {
       }
     )
       .then((res) => {
-        //console.log(res.data);
+        console.log(res.data);
+        setcomment("");
         fetchData();
       })
       .catch((error) => {
@@ -285,10 +287,8 @@ const Home = () => {
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
-                    console.log(comment);
-                    // setcomment(e.target[0].value)
-                    makeComment(e.target[0].value, item._id);
-                    //console.log(e.target[0].value, item._id);
+                    console.log(item._id, comment);
+                    makeComment(item._id, comment);
                   }}
                 >
                   <input

@@ -1,19 +1,22 @@
 export const initialState = null;
 
-export const reducer = (state = initialState, action) => {
-  switch (action.type) {
+export const reducer = (state = initialState, { type, payload }) => {
+  console.log(type, payload);
+  switch (type) {
     case "USER":
-      return action.payload;
+      return payload;
     case "UPDATE":
+      console.log(payload);
       return {
         ...state,
-        followers: action.payload.followers,
-        following: action.payload.following,
+        // payload,
+        followers: payload.followers,
+        following: payload.following,
       };
     case "UPDATEIMG":
       return {
         ...state,
-        url: action.payload,
+        url: payload,
       };
     case "CLEAR":
       return null;
